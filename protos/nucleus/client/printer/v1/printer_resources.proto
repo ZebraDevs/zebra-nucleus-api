@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package nucleus.client.printer.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.zebra.proto.nucleus.client.printer.v1";
+
+
+// An alert raised by a device, reported alongside a print job result.
+message Alert {
+  string serial_number = 1; // Serial number used to match the alert to a device
+  string description = 2;
+  AlertType type = 3;
+  google.protobuf.Timestamp occurred_at = 4; // Timestamp of when the alert occurred
+  AlertState state = 5; // Indicates whether the alert is set or cleared
+}
+
+enum AlertState {
+  ALERT_STATE_UNSPECIFIED = 0;
+  ALERT_STATE_CLEARED = 1;
+  ALERT_STATE_SET = 2;
+}
+
+enum AlertType {
+  ALERT_TYPE_UNSPECIFIED = 0;
+  ALERT_TYPE_UNKNOWN = 1;
+  ALERT_TYPE_ERROR = 2;
+  ALERT_TYPE_WARNING = 3;
+  ALERT_TYPE_ALERT = 4;
+  ALERT_TYPE_LABEL_READY = 5;
+}

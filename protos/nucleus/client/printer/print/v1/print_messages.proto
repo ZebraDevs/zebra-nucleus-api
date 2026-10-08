@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package nucleus.client.printer.print.v1;
+
+import "buf/validate/validate.proto";
+import "nucleus/client/printer/print/v1/print_resources.proto";
+import "nucleus/client/printer/v1/printer_resources.proto";
+
+option java_multiple_files = true;
+option java_package = "com.zebra.proto.nucleus.client.printer.print.v1";
+
+message PrintRequest {
+  repeated string serial_numbers = 1 [(buf.validate.field).repeated.min_items = 1];
+  PrintContent content = 2 [(buf.validate.field).required = true];
+}
+
+message PrintResponse {
+  string serial_number = 1;
+  oneof result {
+    option (buf.validate.oneof).required = true;
+    // Job accepted and queued; check current_alerts field for any issues
+    string job_id = 2;
+    // Job rejected; cannot be processed
+    PrintError error = 3;
+  }
+  repeated nucleus.client.printer.v1.Alert current_alerts = 4;
+}
+
+message GetPrintJobStatusRequest {
+  string command_id = 1 [(buf.validate.field).required = true];
+}
+
+message GetPrintJobStatusResponse {
+  PrintJob print_job = 1;
+}
+
+message CancelPrintJobRequest {
+  string command_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message CancelPrintJobResponse {
+  CancelPrintJobResult status = 1;
+}

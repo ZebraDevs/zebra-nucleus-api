@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package nucleus.client.printer.print.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.zebra.proto.nucleus.client.printer.print.v1";
+
+message PrintContent {
+  oneof content {
+    option (buf.validate.oneof).required = true;
+    bytes data = 1 [(buf.validate.field).bytes = {
+      min_len: 1
+      max_len: 10485760 // 10 MB max file size
+    }];
+    RemoteFile remote_file = 2;
+  }
+}
+
+message RemoteFile {
+  string uri = 1 [(buf.validate.field).string.uri = true];
+  optional string crc32 = 2;
+  repeated bytes trust_chain = 3 [(buf.validate.field).repeated.max_items = 10];
+}
+
+message PrintError {
+  PrintErrorCode code = 1;
+  string message = 2;
+}
+
+enum PrintErrorCode {
+  PRINT_ERROR_CODE_UNSPECIFIED = 0;
+  PRINT_ERROR_CODE_PRINTER_NOT_FOUND = 1;
+  PRINT_ERROR_CODE_INVALID_CONTENT = 2;
+  PRINT_ERROR_CODE_FILE_NOT_FOUND = 3;
+  PRINT_ERROR_CODE_FILE_NOT_ACCESSIBLE = 4;
+  PRINT_ERROR_CODE_INTERNAL_ERROR = 5;
+}
+
+enum PrintJobStatus {
+  PRINT_JOB_STATUS_UNSPECIFIED = 0;
+  PRINT_JOB_STATUS_PENDING = 1;
+  PRINT_JOB_STATUS_IN_PROGRESS = 2;
+  PRINT_JOB_STATUS_COMPLETED = 3;
+  PRINT_JOB_STATUS_FAILED = 4;
+  PRINT_JOB_STATUS_CANCELLED = 5;
+}
+
+enum CancelPrintJobResult {
+  CANCEL_PRINT_JOB_RESULT_UNSPECIFIED = 0;
+  CANCEL_PRINT_JOB_RESULT_CANCELLED = 1;
+  CANCEL_PRINT_JOB_RESULT_NOT_CANCELLABLE = 2;
+}
+
+message PrintJob {
+  string serial_number = 1;
+  PrintJobStatus status = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp completed_at = 4;
+  optional string error_details = 5;
+}
