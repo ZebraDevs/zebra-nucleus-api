@@ -10,11 +10,11 @@ protos/nucleus/client/printer/print/v1/print_service.proto      # PrintService: 
 protos/nucleus/client/printer/print/v1/print_messages.proto     # request/response messages
 protos/nucleus/client/printer/print/v1/print_resources.proto    # PrintJob, PrintContent, enums
 protos/nucleus/client/printer/v1/printer_resources.proto        # Alert, AlertState and AlertType only
-protos/buf/validate/validate.proto                               # proto validate constraints (dependency)
-google/protobuf/timestamp.proto                                  # vendored well-known type
-google/protobuf/duration.proto                                   # vendored well-known type
-google/protobuf/field_mask.proto                                  # vendored well-known type
-google/protobuf/descriptor.proto                                  # vendored well-known type (buf/validate dependency)
+protos/buf/validate/validate.proto                              # proto validate constraints (dependency)
+google/protobuf/timestamp.proto                                 # vendored well-known type
+google/protobuf/duration.proto                                  # vendored well-known type
+google/protobuf/field_mask.proto                                # vendored well-known type
+google/protobuf/descriptor.proto                                # vendored well-known type (buf/validate dependency)
 ```
 
 `PrintService` is `nucleus.client.printer.print.v1.PrintService`, and `Print` is server-streaming.
